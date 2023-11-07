@@ -22,7 +22,7 @@ fi
 # compile_result=$(javac.exe -cp $CPATH *.java 2>&1)
 
 # new approach
-# attempt to compile the java code
+# attempt to compile the java code (silenced)
 # https://tecadmin.net/store-standard-error-to-a-bash-variable/
 # https://www.baeldung.com/linux/silencing-bash-output
 compile_result=`javac.exe -cp $CPATH *.java &> /dev/null`
