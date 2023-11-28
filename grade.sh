@@ -1,4 +1,4 @@
-CPATH=".;lib/hamcrest-core-1.3.jar;lib/junit-4.13.2.jar"
+CPATH=".:lib/hamcrest-core-1.3.jar:lib/junit-4.13.2.jar"
 
 # remove previous submission
 rm -rf grading-area
@@ -19,13 +19,13 @@ fi
 
 # previous approach
 # https://stackoverflow.com/questions/962255/how-to-store-standard-error-in-a-variable
-# compile_result=$(javac.exe -cp $CPATH *.java 2>&1)
+# compile_result=2>&1
 
 # new approach
 # attempt to compile the java code (silenced)
 # https://tecadmin.net/store-standard-error-to-a-bash-variable/
 # https://www.baeldung.com/linux/silencing-bash-output
-compile_result=`javac.exe -cp $CPATH *.java &> /dev/null`
+compile_result=`javac -cp $CPATH *.java &> /dev/null`
 status=$?
 if [[ $status -ne 0 ]]
 then
@@ -34,7 +34,7 @@ then
 fi
 
 # get the junit results
-result=`java.exe -cp $CPATH org.junit.runner.JUnitCore TestListExamples`
+result=`java -cp $CPATH org.junit.runner.JUnitCore TestListExamples`
 
 if [[ $result == *OK* ]]
 then
@@ -43,10 +43,10 @@ then
 else
   # https://stackoverflow.com/questions/17883661/how-to-extract-numbers-from-a-string
   numbers=`echo $result | grep -o -E "[0-9]+" | tail -n 2`
-  tests_run=$((${numbers:0:1}))
-  tests_failed=$((${numbers:1:2}))
+  numbers_array=($numbers)
+  tests_run=$((${numbers_array[0]}))
+  tests_failed=$((${numbers_array[1]}))
   tests_passed=$(($tests_run - $tests_failed))
-  
   if [[ $tests_passed -ge $tests_failed ]]
   then
     echo "pass: $tests_passed / $tests_run"
